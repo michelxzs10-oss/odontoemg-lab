@@ -1,21 +1,23 @@
-# Registro de decisiones
+# Decisiones
 
-Una fila por decisión técnica. Si una decisión cambia, se agrega una fila nueva; no se borra la anterior.
+## Lo que ya se decidió
 
-| # | Fecha | Decisión | Por qué | Alternativas descartadas |
-| --- | --- | --- | --- | --- |
-| 1 | 2026-10-15 | Aplicación web estática, sin servidor | Funciona en laptop, tablet y celular sin instalar; hosting barato; aguanta muchos alumnos a la vez | App nativa; servidor que calcule la señal |
-| 2 | 2026-10-15 | Motor en un Web Worker, separado de la interfaz | La interfaz no se traba aunque el cálculo sea pesado | Calcular en el hilo principal |
-| 3 | 2026-10-15 | Señal por un canal rápido (buffer + Canvas), fuera de Svelte | 2 000 muestras/s por canal trabarían el framework | Pasar las muestras por el estado reactivo |
-| 4 | 2026-10-15 | Svelte 5 + TypeScript + Vite | Ligero, buen rendimiento en tablets, estado integrado | React (más pesado), Preact (alternativa válida) |
-| 5 | 2026-10-15 | Canvas 2D para osciloscopio y mapa | Suficiente para 2 canales y 64 celdas; simple | WebGL desde el inicio |
-| 6 | 2026-10-15 | `postMessage` con transferencia en lugar de `SharedArrayBuffer` | GitHub Pages no permite las cabeceras COOP/COEP | `SharedArrayBuffer` (se puede retomar con otro hosting) |
-| 7 | 2026-10-15 | Motor simulado mientras se desarrolla el fisiológico | Permite construir y probar la interfaz desde ya | Esperar al motor real |
+| Decisión | Por qué |
+| --- | --- |
+| Que sea una **página web** y no una aplicación que se instala | Funciona igual en computadora, tablet y celular, y no depende de tiendas de aplicaciones |
+| Que **no necesite servidor** | Es más barato de mantener y aguanta a muchos alumnos al mismo tiempo |
+| Separar el **músculo virtual** de la **pantalla** | Se puede mejorar el modelo del músculo sin rehacer la pantalla, y la pantalla no se traba |
+| Empezar con una **señal aproximada** | Permite construir y probar la pantalla desde ya, sin esperar al modelo fisiológico |
+| Que sea **código abierto** | Otras escuelas pueden usarlo y mejorarlo, como plantea el protocolo |
+| Usar un **atlas anatómico libre** (Z-Anatomy) para el cráneo 3D | No hay que modelar la anatomía desde cero y su licencia permite usarlo |
 
-## Pendientes de decidir
+## Lo que falta decidir juntos
 
-- [ ] Licencia del código: MIT (máxima reutilización) o GPL (las mejoras deben seguir abiertas).
-- [ ] Valores de fuerza y fatiga de cada escenario clínico (validar con el equipo clínico).
-- [ ] Escalas y colores del equipo de captura del departamento, para imitarlo.
-- [ ] Threlte o Three.js directo para la vista 3D.
-- [ ] Hosting final: GitHub Pages o el servidor institucional.
+- [ ] **Valores de cada escenario**: qué fuerza y qué nivel de fatiga representan mejor la función normal, la fatiga y el bruxismo.
+- [ ] **Parecido con el equipo del departamento**: escalas, colores y orden de los canales que usa el equipo real.
+- [ ] **Terminología**: que los nombres en pantalla sean los que se usan en la materia.
+- [ ] **Casos clínicos**: qué casos usar en el modo guiado y cómo se evalúan.
+- [ ] **Licencia del código**: MIT (cualquiera puede reutilizarlo) o GPL (las mejoras deben seguir siendo abiertas).
+- [ ] **Dónde publicarlo al final**: GitHub Pages (gratuito) o un servidor de la universidad.
+
+*Cuando se tome una decisión, se mueve de la segunda lista a la primera con la fecha.*

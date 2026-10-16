@@ -1,76 +1,52 @@
 # OdontoEMG Lab
 
-Laboratorio virtual de **electromiografía de superficie (sEMG) del músculo masetero** para la enseñanza de Rehabilitación Oral II. Proyecto PAPIME 2027 (UNAM · IPN).
+Un laboratorio virtual para aprender a hacer **electromiografía del músculo masetero** (el registro de la actividad eléctrica del músculo con electrodos sobre la piel), sin depender de los equipos del laboratorio.
 
-> **Estado: v0.1, solo interfaz.** La señal viene de un **motor simulado** (ruido filtrado con amplitud y espectro aproximados), no de un modelo fisiológico. El motor real se conectará después sin cambiar la interfaz.
+Proyecto PAPIME 2027 · UNAM e IPN · materia de Rehabilitación Oral II.
 
-![Diseño propuesto de la pantalla principal](docs/img/mockup-vista3d.jpg)
+![Cómo se verá la pantalla principal](docs/img/mockup-vista3d.jpg)
 
-## Qué funciona hoy
+## ¿Por qué existe?
 
-| Función | Estado |
+Cada año hay unos 600 alumnos y solo 3 equipos de electromiografía, así que muy pocos alcanzan a practicar. Este simulador permite que cualquier alumno practique desde una computadora, tablet o celular, sin instalar nada.
+
+## ¿Qué se puede hacer hoy?
+
+Esta es una **primera versión de la pantalla**. Ya se puede:
+
+- **Ver la señal del músculo** en un osciloscopio, como en el equipo real, para el masetero derecho y el izquierdo.
+- **Colocar el electrodo** tocando o arrastrando sobre el músculo, y ver cómo cambia la señal si queda bien o mal colocado.
+- **Mover la fuerza de mordida y la fatiga** y ver cómo responde el músculo.
+- **Leer los indicadores** que se usan en clínica: la intensidad de la señal (RMS), la frecuencia mediana (que baja cuando el músculo se fatiga) y la simetría entre ambos lados.
+- **Elegir un escenario**: función normal, fatiga muscular o bruxismo.
+- **Congelar la señal y guardar una captura.**
+
+**Importante:** por ahora la señal es una **aproximación** que sirve para construir y probar la pantalla. Todavía no sale del modelo fisiológico del músculo, que se conectará más adelante. Los valores de los escenarios también son provisionales y deben revisarse con el equipo clínico.
+
+## ¿Qué falta?
+
+| Cuándo | Qué |
 | --- | --- |
-| Osciloscopio de 2 canales (masetero der./izq.) con barrido, escalas, congelar y exportar captura | ✅ |
-| Mapa HD 8 × 8 con electrodo arrastrable (dedo, ratón o flechas del teclado) | ✅ |
-| Controles de fuerza de mordida, fatiga y contraer/relajar | ✅ |
-| Indicadores: RMS por lado, frecuencia mediana, simetría y su tendencia | ✅ |
-| Escenarios clínicos (normal, fatiga, bruxismo) | ✅ valores provisionales |
-| Vista 3D del cráneo y los músculos | ⏳ T3–T4 |
-| Modos caso guiado y práctica entre pares | ⏳ T4 |
-| Motor fisiológico (motoneuronas LIF) | ⏳ fuera del alcance de este repositorio por ahora |
+| Trimestre 3 | Un cráneo en 3D con sus músculos, donde el alumno coloca el electrodo directamente |
+| Trimestre 4 | Casos clínicos guiados, práctica entre compañeros y uso sin internet |
+| Trimestre 5 | Ajustes después de comparar con el equipo real; versión de prueba para alumnos |
 
-## Probarlo
+## ¿Cómo probarlo?
 
-**Sin instalar nada:** abre la versión publicada en GitHub Pages: `https://<usuario>.github.io/odontoemg-lab/` *(se activa al configurar Pages; ver [CONTRIBUTING.md](CONTRIBUTING.md))*.
+Abre el enlace de la versión publicada: `https://<usuario>.github.io/odontoemg-lab/`. Funciona en el navegador; no hay que instalar nada.
 
-**En tu computadora** (requiere [Node.js](https://nodejs.org) 20.19 o más reciente):
+## ¿Cómo participar?
 
-```bash
-npm install
-npm run dev      # abre http://localhost:5173
-```
+No hace falta saber programar. Puedes probar el simulador y dejar comentarios, por ejemplo: *"la señal en fatiga no se parece a la del equipo"* o *"este término no es el que usamos en clase"*. La guía paso a paso está en **[Cómo colaborar](CONTRIBUTING.md)**.
 
-| Comando | Para qué |
-| --- | --- |
-| `npm run dev` | Servidor de desarrollo con recarga automática |
-| `npm run check` | Revisa tipos y errores de Svelte |
-| `npm run build` | Genera la versión publicable en `dist/` |
+## Más información
 
-## Cómo está organizado
+- [Cómo funciona](docs/como-funciona.md): el simulador explicado en pocas palabras.
+- [La pantalla](docs/pantalla.md): qué hay en cada parte y qué aprende el alumno con ella.
+- [Decisiones](docs/decisiones.md): qué se decidió, por qué y qué falta decidir juntos.
+- [Para desarrolladores](docs/para-desarrolladores.md): detalles técnicos para quien programe.
 
-```text
-src/
-├── App.svelte                 pantalla principal y conexión con el motor
-├── app.css                    tokens de diseño (colores, tipografía, radios)
-└── lib/
-    ├── componentes/           Osciloscopio, MapaHD, Vista3D, Controles, Indicadores
-    ├── estado/                estado único de la interfaz (Svelte 5, runas)
-    ├── render/                dibujo en Canvas: osciloscopio y mapa HD
-    ├── worker/                contrato con el motor, puente y buffer circular
-    └── motor-simulado/        generador de señal provisional (Web Worker)
-docs/
-├── arquitectura.md            cómo encajan las piezas (1 diagrama)
-├── interfaz.md                componentes, estado y diseño
-└── decisiones.md              registro de decisiones técnicas
-```
+## Créditos
 
-## Documentación
-
-- [Arquitectura](docs/arquitectura.md): las dos capas, los dos canales de datos y el contrato con el motor.
-- [Interfaz](docs/interfaz.md): componentes, estado, diseño, accesibilidad y plan de la vista 3D.
-- [Decisiones](docs/decisiones.md): qué se decidió, por qué y qué falta decidir.
-- [Cómo colaborar](CONTRIBUTING.md): con o sin programar.
-
-## Hoja de ruta de la interfaz
-
-| Trimestre | Entregable |
-| --- | --- |
-| T2 | ✅ Esta base: osciloscopio, mapa HD, controles e indicadores con motor simulado |
-| T3 | Modelo 3D preparado en Blender; vista 3D conectada al estado del electrodo |
-| T4 | Modos caso guiado y entre pares; PWA instalable; pruebas con alumnos |
-| T5 | Ajustes tras la validación contra el equipo real; versión beta |
-
-## Créditos y licencia
-
-- Código: licencia MIT (ver [LICENSE](LICENSE)). *Pendiente de confirmar con el equipo del proyecto.*
-- Modelo anatómico previsto: [Z-Anatomy](https://github.com/Z-Anatomy/The-blend) (CC BY-SA 4.0), basado en BodyParts3D © The Database Center for Life Science (CC BY-SA 2.1 Japón).
+- El cráneo 3D se basará en [Z-Anatomy](https://github.com/Z-Anatomy/The-blend), un atlas anatómico libre (licencia CC BY-SA 4.0), que a su vez parte de BodyParts3D © The Database Center for Life Science (CC BY-SA 2.1 Japón).
+- El código es abierto (licencia MIT, por confirmar).

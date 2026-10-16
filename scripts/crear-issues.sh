@@ -27,7 +27,7 @@ issue "Probar rendimiento en las tablets de los alumnos" "interfaz,T3" \
 "Abrir la versión publicada en las tablets más modestas que se usarán y verificar que el osciloscopio se ve fluido. Anotar modelo, navegador y si se traba."
 
 issue "Preparar el modelo 3D del cráneo y los músculos en Blender" "vista 3D,T3" \
-"A partir de Z-Anatomy (CC BY-SA 4.0): cráneo, mandíbula con pivote en la ATM, masetero, temporal y pterigoideos como objetos con nombre; reducir polígonos; mapa UV del masetero alineado con la rejilla 8×8; exportar a public/modelos/craneo-musculos.glb con Draco. Ver docs/interfaz.md."
+"A partir de Z-Anatomy (CC BY-SA 4.0): cráneo, mandíbula con pivote en la ATM, masetero, temporal y pterigoideos como objetos con nombre; reducir polígonos; mapa UV del masetero alineado con la rejilla 8×8; exportar a public/modelos/craneo-musculos.glb con Draco. Ver docs/para-desarrolladores.md."
 
 issue "Implementar la vista 3D con Three.js" "vista 3D,interfaz,T3" \
 "Sustituir el componente pendiente Vista3D.svelte: cargar el .glb, colocar el electrodo con Raycaster usando la coordenada UV, colorear el masetero con el RMS. Depende del modelo de Blender."

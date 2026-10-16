@@ -1,7 +1,7 @@
 <!--
   Vista 3D del cráneo y los músculos masticatorios — PENDIENTE (plan: T3–T4).
 
-  Plan (ver docs/interfaz.md, sección "Vista 3D"):
+  Plan (ver docs/para-desarrolladores.md, sección "Vista 3D"):
   1. Cargar /modelos/craneo-musculos.glb con GLTFLoader + DRACOLoader (Three.js).
   2. Raycaster sobre el objeto "masetero_der": la coordenada UV del punto tocado
      se escribe en estado.electrodo (la misma que usa el mapa HD).
