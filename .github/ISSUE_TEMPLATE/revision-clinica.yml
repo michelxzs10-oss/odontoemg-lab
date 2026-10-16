@@ -1,0 +1,35 @@
+name: Revisión clínica o docente
+description: Algo que no se ve o no se comporta como en clínica o en el equipo real.
+title: "[Revisión] "
+labels: ["revisión clínica"]
+body:
+  - type: textarea
+    id: que
+    attributes:
+      label: ¿Qué viste en el simulador?
+      description: Si puedes, pega una captura (botón Exportar captura del osciloscopio).
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: ¿Cómo debería verse o comportarse?
+      description: Por ejemplo, cómo lo muestra el equipo de captura o qué esperaría ver el alumno.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - Señal y osciloscopio
+        - Colocación del electrodo
+        - Indicadores (RMS, frecuencia mediana, simetría)
+        - Escenarios clínicos
+        - Textos y terminología
+        - Otra
+  - type: textarea
+    id: referencia
+    attributes:
+      label: Referencia (opcional)
+      description: Artículo, manual del equipo o material del curso que respalde el cambio.

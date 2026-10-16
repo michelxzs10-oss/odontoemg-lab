@@ -1,0 +1,93 @@
+/* Tokens de diseño. Cambiar aquí cambia toda la interfaz. */
+:root {
+  --fondo: #eef1f4;
+  --superficie: #ffffff;
+  --superficie-2: #f4f6f8;
+  --borde: #d6dce2;
+  --borde-fuerte: #c3cbd3;
+  --texto: #14212b;
+  --texto-2: #4f5d6a;
+  --acento: #1f5fae; /* controles e interacción */
+  --acento-suave: #e3edf8;
+  --acento-texto: #0f3d73;
+  --activacion: #d2462c; /* reservado para activación muscular */
+  --canal-der: #1f5fae;
+  --canal-izq: #b4501e;
+  --escena: #0f1922; /* fondo de la vista anatómica */
+  --escena-texto: #e7edf2;
+  --escena-texto-2: #9fb0be;
+  --radio: 10px;
+  --radio-tarjeta: 18px;
+  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+button,
+select,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid #7fb0e8;
+  outline-offset: 2px;
+}
+
+.tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-tarjeta);
+  padding: 20px;
+}
+
+.boton {
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: var(--radio);
+  border: 1px solid var(--borde-fuerte);
+  background: var(--superficie);
+  color: var(--texto);
+}
+
+.boton.primario {
+  border-color: var(--acento);
+  background: var(--acento);
+  color: #fff;
+  font-weight: 600;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

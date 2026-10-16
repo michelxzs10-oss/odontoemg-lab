@@ -1,0 +1,28 @@
+name: Propuesta
+description: Una función nueva o un cambio de diseño.
+title: "[Propuesta] "
+labels: ["propuesta"]
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: ¿Qué problema resuelve?
+      description: Para el alumno o para el docente.
+    validations:
+      required: true
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: Propuesta
+      description: Puede incluir un boceto o captura.
+    validations:
+      required: true
+  - type: dropdown
+    id: objetivo
+    attributes:
+      label: Objetivo del protocolo relacionado
+      options:
+        - "Objetivo 1: simulador (fatiga, colocación de electrodos, gráficas)"
+        - "Objetivo 2: materiales didácticos y casos clínicos"
+        - "Objetivo 3: evaluación del aprendizaje"
+        - Ninguno en particular
