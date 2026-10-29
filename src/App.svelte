@@ -5,6 +5,7 @@
   import Osciloscopio from './lib/componentes/Osciloscopio.svelte';
   import MapaHD from './lib/componentes/MapaHD.svelte';
   import Vista3D from './lib/componentes/Vista3D.svelte';
+  import Craneo2D from './lib/componentes/Craneo2D.svelte';
   import Controles from './lib/componentes/Controles.svelte';
   import Indicadores from './lib/componentes/Indicadores.svelte';
 
@@ -36,12 +37,12 @@
   // Canal lento: cada cambio de parámetros se envía al motor.
   $effect(() => {
     const c = estado.contraccion;
-    const e = estado.electrodo;
+    const { a, b } = estado.electrodos;
     puente?.enviarParametros({
       fuerza: c.fuerza,
       fatiga: c.fatiga,
       contrayendo: c.contrayendo,
-      electrodo: { u: e.u, v: e.v },
+      electrodos: { a: { u: a.u, v: a.v }, b: { u: b.u, v: b.v } },
     });
   });
 </script>
@@ -100,14 +101,25 @@
     <section class="escena" aria-labelledby="titulo-escena">
       <div class="escena-barra">
         <div>
-          <h2 id="titulo-escena">Colocación del electrodo</h2>
-          <p>Toca o arrastra sobre el masetero para mover el electrodo</p>
+          <h2 id="titulo-escena">Colocación de electrodos</h2>
+          <p>
+            {#if estado.visualizacion.vista === '2d'}
+              Arrastra A o B en una vista lateral · arrastra la línea entre ellos para mover el par
+            {:else}
+              Toca o arrastra sobre el masetero para mover el par de electrodos
+            {/if}
+          </p>
         </div>
         <div role="group" aria-label="Vista" class="pestanas">
           <button
             type="button"
             aria-pressed={estado.visualizacion.vista === 'mapa'}
             onclick={() => (estado.visualizacion.vista = 'mapa')}>Mapa HD</button
+          >
+          <button
+            type="button"
+            aria-pressed={estado.visualizacion.vista === '2d'}
+            onclick={() => (estado.visualizacion.vista = '2d')}>Cráneo 2D</button
           >
           <button
             type="button"
@@ -118,6 +130,8 @@
       </div>
       {#if puente && estado.visualizacion.vista === 'mapa'}
         <MapaHD {puente} />
+      {:else if estado.visualizacion.vista === '2d'}
+        <Craneo2D />
       {:else if estado.visualizacion.vista === '3d'}
         <Vista3D />
       {/if}

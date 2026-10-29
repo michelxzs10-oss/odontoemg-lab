@@ -9,6 +9,7 @@
 | Parte | Qué muestra | Qué aprende el alumno |
 | --- | --- | --- |
 | **Colocación del electrodo** | Un mapa del masetero que se ilumina donde hay más actividad, y el electrodo, que se mueve con el dedo | Dónde colocar el electrodo y qué pasa si queda lejos del centro del músculo |
+| **Cráneo 2D** | El cráneo de frente y de cada lado, con los electrodos A y B sobre el masetero derecho y una lista que revisa la colocación | Colocar el par sobre el vientre, a la distancia correcta, paralelo a las fibras y lejos de la zona de inervación |
 | **Osciloscopio** | La señal del masetero derecho e izquierdo, en tiempo real | A leer la señal como en el equipo: amplitud, reposo y contracción |
 | **Controles** | Fuerza de mordida, nivel de fatiga y el botón Contraer / Relajar | Cómo cambia la señal con el esfuerzo y con el cansancio del músculo |
 | **Indicadores** | Intensidad de la señal de cada lado, frecuencia mediana y simetría | A interpretar los números que se reportan en clínica |

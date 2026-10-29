@@ -5,20 +5,30 @@
  * Las muestras de señal NO viven aquí: van por el canal rápido (buffers circulares).
  */
 import type { Indices } from '../worker/contrato';
+import { PAR_INICIAL, type Par } from '../anatomia/masetero';
+import type { VistaCraneo } from '../anatomia/vistas';
 
 export type Modo = 'libre' | 'caso' | 'pares';
 export type Escenario = 'normal' | 'fatiga' | 'bruxismo';
-export type VistaAnatomica = 'mapa' | '3d';
+export type VistaAnatomica = 'mapa' | '2d' | '3d';
 
 export const estado = $state({
   /** Modo de trabajo y escenario clínico. */
   sesion: { modo: 'libre' as Modo, escenario: 'fatiga' as Escenario },
   /** Lo que el alumno controla. */
   contraccion: { fuerza: 0.6, fatiga: 0.6, contrayendo: false },
-  /** Posición del electrodo sobre el masetero (0 a 1). */
-  electrodo: { u: 0.5, v: 0.55 },
-  /** Cómo se muestra la señal. */
-  visualizacion: { uvPorDiv: 500, congelado: false, vista: 'mapa' as VistaAnatomica },
+  /** Par bipolar A–B sobre el masetero derecho (u, v de 0 a 1; ver anatomia/masetero.ts). */
+  electrodos: structuredClone(PAR_INICIAL) as Par,
+  /** Cómo se muestra la señal y la anatomía. */
+  visualizacion: {
+    uvPorDiv: 500,
+    congelado: false,
+    vista: 'mapa' as VistaAnatomica,
+    /** Vista activa del cráneo 2D. */
+    vistaCraneo: 'der' as VistaCraneo,
+    /** Mostrar la zona recomendada (vientre del músculo). */
+    zonaRecomendada: true,
+  },
   /** Lo último que calculó el motor. */
   indices: null as Indices | null,
 });
@@ -34,4 +44,9 @@ export function aplicarEscenario(e: Escenario): void {
   estado.sesion.escenario = e;
   estado.contraccion.fuerza = ESCENARIOS[e].fuerza;
   estado.contraccion.fatiga = ESCENARIOS[e].fatiga;
+}
+
+/** Regresa el par A–B a la posición recomendada. */
+export function restablecerElectrodos(): void {
+  estado.electrodos = structuredClone(PAR_INICIAL);
 }

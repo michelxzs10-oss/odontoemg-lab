@@ -4,7 +4,7 @@
   Plan (ver docs/para-desarrolladores.md, sección "Vista 3D"):
   1. Cargar /modelos/craneo-musculos.glb con GLTFLoader + DRACOLoader (Three.js).
   2. Raycaster sobre el objeto "masetero_der": la coordenada UV del punto tocado
-     se escribe en estado.electrodo (la misma que usa el mapa HD).
+     mueve el par en estado.electrodos (las mismas u, v que usan el mapa HD y el cráneo 2D).
   3. Colorear el masetero con estado.indices.rms (brillo emisivo).
   4. Importar este componente con import() dinámico para no retrasar el arranque.
 -->
