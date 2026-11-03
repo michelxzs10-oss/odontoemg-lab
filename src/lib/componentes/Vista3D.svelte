@@ -1,3 +1,5 @@
+<script lang="ts"></script>
+
 <!--
   Vista 3D del cráneo y los músculos masticatorios — PENDIENTE (plan: T3–T4).
 

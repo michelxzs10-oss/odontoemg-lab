@@ -21,7 +21,7 @@
 
   onMount(() => {
     const render = new RenderMapaHD(canvas, rampa, '#0f1922');
-    let ultimo = new Float32Array(64);
+    let ultimo: Float32Array = new Float32Array(64);
 
     puente.alRecibirMapa((valores) => {
       ultimo = valores;
