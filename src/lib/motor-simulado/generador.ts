@@ -47,6 +47,33 @@ export function factorPosicion(u: number, v: number): number {
   return Math.max(0, vientre * inervacion);
 }
 
+/** Tamaño aproximado del masetero en mm (el mismo que usa la interfaz en anatomia/masetero.ts). */
+const MASETERO_MM = { ancho: 40, alto: 55 };
+
+type Electrodos = Parametros['electrodos'];
+
+/**
+ * Qué tanto de la actividad capta el par bipolar A–B:
+ * - posición: la de su punto medio (vientre e inervación, como `factorPosicion`);
+ * - distancia: muy juntos, A y B ven casi la misma señal y la resta la cancela;
+ *   vale 1 a 20 mm y crece poco más allá;
+ * - orientación: paralelo a las fibras capta más que perpendicular;
+ * - inervación: si la zona de inervación queda entre A y B, los potenciales
+ *   viajan en sentidos opuestos bajo cada electrodo y la resta se cancela en parte.
+ */
+export function factorPar(e: Electrodos): number {
+  const u = (e.a.u + e.b.u) / 2;
+  const v = (e.a.v + e.b.v) / 2;
+  const du = (e.b.u - e.a.u) * MASETERO_MM.ancho;
+  const dv = (e.b.v - e.a.v) * MASETERO_MM.alto;
+  const d = Math.hypot(du, dv);
+  const distancia = Math.min(1.15, (1 - Math.exp(-d / 8)) / (1 - Math.exp(-20 / 8)));
+  const cos2 = d > 0 ? (dv * dv) / (d * d) : 1;
+  const orientacion = 0.45 + 0.55 * cos2;
+  const cruza = (e.a.v - INERVACION.v) * (e.b.v - INERVACION.v) < 0 ? 0.45 : 1;
+  return factorPosicion(u, v) * distancia * orientacion * cruza;
+}
+
 /** Un canal: ruido blanco → paso-banda de primer orden con corte variable. */
 class Canal {
   private r: () => number;
@@ -91,7 +118,7 @@ export class MotorSimulado {
     fuerza: 0.6,
     fatiga: 0.35,
     contrayendo: false,
-    electrodo: { u: 0.5, v: 0.55 },
+    electrodos: { a: { u: 0.5, v: 0.37 }, b: { u: 0.5, v: 0.73 } },
   };
 
   /** Genera `n` muestras por canal, en µV. */
@@ -100,13 +127,13 @@ export class MotorSimulado {
     const izq = new Float32Array(n);
     const p = this.parametros;
     const objetivo = p.contrayendo ? p.fuerza : 0;
-    const pos = factorPosicion(p.electrodo.u, p.electrodo.v);
+    const pos = factorPar(p.electrodos);
     // Rampa de ~80 ms al contraer o relajar.
     const paso = 1 - Math.exp(-1 / (0.08 * FS));
     for (let i = 0; i < n; i++) {
       this.envolvente += paso * (objetivo - this.envolvente);
       const a = RUIDO_BASE_UV + AMPLITUD_MAX_UV * this.envolvente;
-      // El lado derecho lleva el electrodo que mueve el alumno; el izquierdo queda bien colocado.
+      // El lado derecho lleva el par A–B que mueve el alumno; el izquierdo queda bien colocado.
       der[i] = this.canales.der.muestra(a * pos, p.fatiga);
       izq[i] = this.canales.izq.muestra(a * 0.88, p.fatiga);
       this.historial.der[this.pos] = der[i];

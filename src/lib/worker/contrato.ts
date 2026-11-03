@@ -21,8 +21,12 @@ export interface Parametros {
   fatiga: number;
   /** true mientras el alumno mantiene la contracción. */
   contrayendo: boolean;
-  /** Posición del electrodo sobre el masetero, normalizada 0 a 1 (u = ancho, v = alto). */
-  electrodo: { u: number; v: number };
+  /**
+   * Par bipolar sobre el masetero derecho: posición de los electrodos A y B,
+   * normalizada 0 a 1 (u = ancho, de posterior a anterior; v = alto, a lo largo de las fibras).
+   * El canal registra la diferencia A − B.
+   */
+  electrodos: { a: { u: number; v: number }; b: { u: number; v: number } };
 }
 
 /** Mensajes interfaz → motor. */

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { estado } from '../estado/estado.svelte';
+  import { centro, moverPar } from '../anatomia/masetero';
   import { RenderMapaHD, type Rampa } from '../render/mapa-hd';
   import type { Puente } from '../worker/puente';
 
@@ -11,19 +12,23 @@
   let arrastrando = false;
   /** Porcentaje de la amplitud máxima del mapa que capta el electrodo. */
   let captacion = $state<number | null>(null);
+  /** Punto medio del par A–B: es lo que se arrastra en el mapa. */
+  let medio = $derived(centro(estado.electrodos));
+  const POLOS = ['a', 'b'] as const;
 
   /** Rampa de activación sobre fondo oscuro (de reposo a máxima). */
   const rampa: Rampa = ['#2a2226', '#4c2a27', '#79332a', '#a83c2c', '#d8492e'];
 
   onMount(() => {
     const render = new RenderMapaHD(canvas, rampa, '#0f1922');
-    let ultimo = new Float32Array(64);
+    let ultimo: Float32Array = new Float32Array(64);
 
     puente.alRecibirMapa((valores) => {
       ultimo = valores;
       render.dibujar(valores);
-      const col = Math.min(7, Math.floor(estado.electrodo.u * 8));
-      const fila = Math.min(7, Math.floor(estado.electrodo.v * 8));
+      const c = centro(estado.electrodos);
+      const col = Math.min(7, Math.floor(c.u * 8));
+      const fila = Math.min(7, Math.floor(c.v * 8));
       const max = Math.max(...valores);
       captacion = max > 20 ? Math.round((100 * valores[fila * 8 + col]) / max) : null;
     });
@@ -42,8 +47,7 @@
 
   function moverA(e: PointerEvent) {
     const r = area.getBoundingClientRect();
-    estado.electrodo.u = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
-    estado.electrodo.v = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+    moverPar(estado.electrodos, { u: (e.clientX - r.left) / r.width, v: (e.clientY - r.top) / r.height });
   }
 
   function alPresionar(e: PointerEvent) {
@@ -72,8 +76,7 @@
     const mov = d[e.key];
     if (!mov) return;
     e.preventDefault();
-    estado.electrodo.u = Math.min(1, Math.max(0, estado.electrodo.u + mov[0]));
-    estado.electrodo.v = Math.min(1, Math.max(0, estado.electrodo.v + mov[1]));
+    moverPar(estado.electrodos, { u: medio.u + mov[0], v: medio.v + mov[1] });
   }
 </script>
 
@@ -90,12 +93,20 @@
   >
     <canvas bind:this={canvas} aria-hidden="true"></canvas>
     <div class="inervacion" aria-hidden="true"><span>zona de inervación (aprox.)</span></div>
+    {#each POLOS as id (id)}
+      <span
+        class="polo"
+        style:left="{estado.electrodos[id].u * 100}%"
+        style:top="{estado.electrodos[id].v * 100}%"
+        aria-hidden="true">{id.toUpperCase()}</span
+      >
+    {/each}
     <button
       type="button"
       class="electrodo"
-      style:left="{estado.electrodo.u * 100}%"
-      style:top="{estado.electrodo.v * 100}%"
-      aria-label="Electrodo en u {estado.electrodo.u.toFixed(2)}, v {estado.electrodo.v.toFixed(2)}. Usa las flechas para moverlo."
+      style:left="{medio.u * 100}%"
+      style:top="{medio.v * 100}%"
+      aria-label="Par de electrodos con centro en u {medio.u.toFixed(2)}, v {medio.v.toFixed(2)}. Usa las flechas para moverlo."
       onkeydown={alTeclear}
     ></button>
   </div>
@@ -103,7 +114,7 @@
   <div class="info">
     <p class="lectura">
       <span class="punto" class:bien={captacion !== null && captacion >= 70}></span>
-      Electrodo en <span class="mono">u {estado.electrodo.u.toFixed(2)} · v {estado.electrodo.v.toFixed(2)}</span>
+      Centro del par en <span class="mono">u {medio.u.toFixed(2)} · v {medio.v.toFixed(2)}</span>
     </p>
     <p class="captacion">
       {#if captacion === null}
@@ -172,6 +183,21 @@
     background: #f7f7f2;
     box-shadow: 0 0 0 2px var(--escena);
     padding: 0;
+  }
+  .polo {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border-radius: 50%;
+    border: 3px solid #6fa8ec;
+    background: #f7f7f2;
+    color: #0f3d73;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 14px;
+    text-align: center;
+    pointer-events: none;
   }
   .info {
     flex: 1 1 220px;

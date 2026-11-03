@@ -47,13 +47,13 @@ flowchart LR
 
 | Dirección | Mensaje | Contenido |
 | --- | --- | --- |
-| Interfaz → motor | `parametros` | `fuerza`, `fatiga` (0–1), `contrayendo`, `electrodo {u, v}` (0–1) |
+| Interfaz → motor | `parametros` | `fuerza`, `fatiga` (0–1), `contrayendo`, `electrodos {a: {u, v}, b: {u, v}}` (0–1): par bipolar sobre el masetero derecho |
 | Interfaz → motor | `pausar` / `reanudar` | Congelar |
 | Motor → interfaz | `bloque` | Muestras en µV por canal, cada ~50 ms (`Float32Array` transferido) |
 | Motor → interfaz | `indices` | RMS por lado (µV), frecuencia mediana (Hz), simetría (%), ~4 Hz |
 | Motor → interfaz | `mapa` | 64 amplitudes de la rejilla 8×8, ~4 Hz |
 
-Muestreo: 2 000 Hz. Motor simulado: ruido gaussiano con paso-banda de primer orden; el corte superior baja con la fatiga (frecuencia mediana de ~120 Hz a ~75 Hz); amplitud según fuerza y posición (gaussiana sobre el vientre, atenuada sobre la zona de inervación).
+Muestreo: 2 000 Hz. Motor simulado: ruido gaussiano con paso-banda de primer orden; el corte superior baja con la fatiga (frecuencia mediana de ~120 Hz a ~75 Hz); amplitud según fuerza y colocación del par A–B: posición de su punto medio (gaussiana sobre el vientre, atenuada sobre la zona de inervación), distancia entre A y B (muy juntos se cancelan; 1 a 20 mm), orientación respecto a las fibras y si la zona de inervación queda entre ellos.
 
 ## Estructura
 
@@ -62,7 +62,8 @@ src/
 ├── App.svelte                 pantalla principal y conexión con el motor
 ├── app.css                    tokens de diseño
 └── lib/
-    ├── componentes/           Osciloscopio, MapaHD, Vista3D, Controles, Indicadores
+    ├── anatomia/              geometría del par (mm, ángulo, revisión) y vistas del cráneo 2D
+    ├── componentes/           Osciloscopio, MapaHD, Craneo2D, VistaCraneo, Vista3D, Controles, Indicadores
     ├── estado/estado.svelte.ts estado único de la interfaz
     ├── render/                dibujo en Canvas (osciloscopio, mapa HD)
     ├── worker/                contrato, puente y buffer circular
@@ -75,8 +76,8 @@ src/
 | --- | --- | --- |
 | `sesion` | modo, escenario | App |
 | `contraccion` | fuerza, fatiga, contrayendo | Controles |
-| `electrodo` | u, v | MapaHD (después también Vista3D) |
-| `visualizacion` | µV/div, congelado, vista | Osciloscopio, App |
+| `electrodos` | par A–B: `a {u, v}`, `b {u, v}` | MapaHD (mueve el par), Craneo2D (mueve A, B o el par); después también Vista3D |
+| `visualizacion` | µV/div, congelado, vista (`mapa`, `2d`, `3d`), vista del cráneo, zona recomendada | Osciloscopio, App, Craneo2D |
 | `indices` | último cálculo del motor | el puente |
 
 ## Reglas de trabajo
@@ -96,6 +97,13 @@ src/
 | Canvas 2D | Suficiente para 2 canales y 64 celdas | WebGL desde el inicio |
 | `postMessage` con transferencia | GitHub Pages no permite las cabeceras COOP/COEP que exige `SharedArrayBuffer` | `SharedArrayBuffer` (se puede retomar con otro hosting) |
 | Publicación en GitHub Pages con `base: './'` | Gratis y automática desde `main` | Servidor propio |
+
+## Cráneo 2D
+
+- `anatomia/masetero.ts`: coordenadas del músculo (`u` de posterior a anterior, `v` a lo largo de las fibras), tamaño aproximado en mm, distancia y ángulo del par, y la lista de revisión que ve el alumno.
+- `anatomia/vistas.ts`: el masetero de cada vista es un cuadrilátero; `aSvg` y `aMusculo` convierten entre (u, v) y el dibujo con interpolación bilineal. Las vistas no guardan posiciones: todas leen `estado.electrodos`.
+- `VistaCraneo.svelte`: dibuja una vista. Solo la lateral derecha es editable (A, B, la línea o tocar el músculo); la frontal es de revisión y la izquierda no lleva electrodos porque el motor deja fijo ese canal.
+- Los dibujos son provisionales; se reemplazarán por renders ortográficos de Z-Anatomy ajustando las esquinas de `CUADROS`.
 
 ## Vista 3D (plan)
 
